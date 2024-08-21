@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Text Fetcher with refresh</title>
+    <style>
+        /* Loader styles */
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 2s linear infinite;
+            display: none; /* Hidden by default */
+            margin: 20px left;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h2>ChatAI POC</h2>
+
+    <!-- Input field to get the text -->
+    <textarea rows="3" cols="30" type="text" id="textInput" placeholder="Enter question here"></textarea>
+    <div>
+    <button id="sendButton">Submit</button>
+    </div>
+
+    <p></p>
+
+    <!-- Loader icon -->
+    <div class="loader" id="loader"></div>
+
+    <p></p>
+
+    <!-- Div to display the API response -->
+    <div id="apiResponse"></div>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', function() {
+            // Get the text from the input field
+            const text = document.getElementById('textInput').value;
+
+            // Show the loader
+            document.getElementById('loader').style.display = 'block';
+
+            // Define the API endpoint and options
+            const apiEndpoint = 'https://chatai-poc-f4a9h6a2e3gbckde.uksouth-01.azurewebsites.net/api/chatcall';
+            const options = {
+                method: 'POST',
+                mode:'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({'extractedText': text })
+            };
+
+            // Send the text to the API and handle the response
+            fetch(apiEndpoint, options)
+                .then(response => response.json())
+                .then(data => {
+                    // Hide the loader
+                    document.getElementById('loader').style.display = 'none';
+
+                    // Display the response in the div
+                    document.getElementById('apiResponse').innerText = `Result: ${data.result}`;
+                })
+                .catch(error => {
+                    // Hide the loader
+                    document.getElementById('loader').style.display = 'none';
+
+                    // Handle errors
+                    document.getElementById('apiResponse').innerText = `Error: ${error}`;
+                });
+        });
+    </script>
+</body>
+</html>
