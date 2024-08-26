@@ -3,18 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatAI POC</title>
+    <title>SPEND AI</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            width: 450px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container img {
+            width: 40px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .button {
+            background-color: #7b47f5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: #6a3de2;
+        }
         /* Loader styles */
         .loader {
             border: 16px solid #f3f3f3; /* Light grey */
-            border-top: 16px solid #3498db; /* Blue */
+            border-top: 16px solid #7b47f5;; /* Blue */
             border-radius: 50%;
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             animation: spin 2s linear infinite;
             display: none; /* Hidden by default */
-            margin: 20px left;
+            margin-left: 10rem;
         }
 
         @keyframes spin {
@@ -22,31 +79,37 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    
 </head>
 <body>
-    <h2>ChatAI POC</h2>
+    
+    <div class="container">
+        
+    <h2>SPEND AI</h2>
+    <!-- <p>You will be able to add knowledge to your bot after creating it. You can share the bot with your friends and embed it on your website or blog.</p> -->
+    
+        <label for="textInput">Type in your Query</label>
+        <input type="text" id="textInput" autocomplete="off" placeholder='Enter your question here'>
+        <button class="button" onclick="Submit()">Submit</button>
+    
+     <p></p>
 
-    <!-- Input field to get the text -->
-    <textarea rows="3" cols="30" type="text" id="textInput" placeholder="Enter question here"></textarea>
-    <div>
-    <button id="sendButton">Submit</button>
-    </div>
-
-    <p></p>
-
+     <div id="question"></div>
+<p></p>
     <!-- Loader icon -->
     <div class="loader" id="loader"></div>
-
+ 
     <p></p>
 
-    <!-- Div to display the API response -->
-    <div id="apiResponse"></div>
+    <div id="answer"></div>
 
+    </div>
     <script>
-        document.getElementById('sendButton').addEventListener('click', function() {
+        function Submit(){
             // Get the text from the input field
             const text = document.getElementById('textInput').value;
-
+            document.getElementById("question").innerHTML="<span>Query : "+text+"</span>";
+           
             // Show the loader
             document.getElementById('loader').style.display = 'block';
 
@@ -54,7 +117,7 @@
             const apiEndpoint = 'https://chatai-poc-f4a9h6a2e3gbckde.uksouth-01.azurewebsites.net/api/chatcall';
             const options = {
                 method: 'POST',
-                mode:'cors',
+                
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -69,16 +132,18 @@
                     document.getElementById('loader').style.display = 'none';
 
                     // Display the response in the div
-                    document.getElementById('apiResponse').innerText = `Result: ${data.result}`;
+                    //document.getElementById('answer').innerText = `Result: ${data.result}`;
+                    data.result=data.result.replaceAll("\n","<br/>");
+                     document.getElementById("answer").innerHTML="<span>Result : "+data.result+"</span>";
                 })
                 .catch(error => {
                     // Hide the loader
                     document.getElementById('loader').style.display = 'none';
 
                     // Handle errors
-                    document.getElementById('apiResponse').innerText = `Error: ${error}`;
+                    document.getElementById('answer').innerHTML="<span style='color: red;'>Error :"+error+"</span>";;
                 });
-        });
+        }
     </script>
 </body>
 </html>
